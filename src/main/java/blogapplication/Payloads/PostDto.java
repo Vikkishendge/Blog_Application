@@ -1,55 +1,26 @@
-package blogapplication.Model;
+package blogapplication.Payloads;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import blogapplication.Model.Category;
+import blogapplication.Model.Comment;
+import blogapplication.Model.User;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+public class PostDto {
 
 
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
-@Entity
-@Table(name="posts")
-public class Posts {
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	int id;
+	int id ;
 	
-	@Column(nullable=false, length=100)
 	String postTitle;
-	
 	String content;
-	String image;	
+	String image;
 	Date upload_date;
-	
-	@ManyToOne
-	@JsonBackReference("user-post")
 	User user;
-	
-	@ManyToOne
-    @JoinColumn(name="category_id")
-	@JsonBackReference("category-post")
 	Category category;
 	
-	@OneToMany(mappedBy="post",cascade=CascadeType.ALL)
-	@JsonManagedReference("comment-post")
-	Set<Comment> comment=new HashSet<>();
+	Set<Comment> comment= new HashSet<>();
 
 	public int getId() {
 		return id;
@@ -115,8 +86,8 @@ public class Posts {
 		this.comment = comment;
 	}
 
-	public Posts(int id, String postTitle, String content, String image, Date upload_date, User user, Category category,
-			Set<Comment> comment) {
+	public PostDto(int id, String postTitle, String content, String image, Date upload_date, User user,
+			Category category, Set<Comment> comment) {
 		super();
 		this.id = id;
 		this.postTitle = postTitle;
@@ -128,14 +99,10 @@ public class Posts {
 		this.comment = comment;
 	}
 
-	public Posts() {
+	public PostDto() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	
-	
-	
-
 	
 }

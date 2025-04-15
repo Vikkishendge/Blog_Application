@@ -2,6 +2,8 @@ package blogapplication.Model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +32,7 @@ public class Category {
 	String description;
 	
 	@OneToMany(mappedBy="category",cascade=CascadeType.ALL)
+	@JsonManagedReference("category-post")
 	List<Posts> post=new ArrayList<>();
 
 	public int getCategory_id() {
