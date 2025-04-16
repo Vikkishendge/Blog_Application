@@ -23,6 +23,7 @@ import jakarta.persistence.Table;
 //@Setter
 //@NoArgsConstructor
 //@AllArgsConstructor
+
 @Entity
 @Table(name="posts")
 public class Posts {

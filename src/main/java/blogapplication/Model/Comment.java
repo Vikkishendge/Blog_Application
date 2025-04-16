@@ -17,8 +17,8 @@ import lombok.Setter;
 /*@Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Entity*/
+@AllArgsConstructor*/
+@Entity
 @Table(name="comment")
 public class Comment {
 

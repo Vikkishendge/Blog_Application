@@ -1,5 +1,6 @@
 package blogapplication.Controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import blogapplication.Payloads.PostDto;
+import blogapplication.Service.CloudinaryService;
 import blogapplication.Service.PostService;
 
 @RestController
@@ -24,22 +28,36 @@ public class PostController {
 	@Autowired
 	private PostService postService;
 	
+	@Autowired
+	private CloudinaryService clService;
+	
 	@PostMapping("post/{userId}/{categoryId}")
-	public ResponseEntity<PostDto> createPost(@RequestBody PostDto postdto,@PathVariable int userId,@PathVariable int categoryId)
-	{
-		PostDto postDto=this.postService.createPost(postdto, userId, categoryId);
+	public ResponseEntity<PostDto> createPost(@RequestParam("postTitle") String postTitle,
+		    @RequestParam("content") String content,
+		    @RequestParam("image") MultipartFile imageFile,
+		    @PathVariable int userId,
+		    @PathVariable int categoryId) throws IOException
+	   {
+		
+		String url = clService.uploadFile(imageFile);
+		
+		PostDto post=new PostDto();
+		post.setPostTitle(postTitle);
+		post.setContent(content);
+		post.setImage(url);
+		PostDto postDto=this.postService.createPost(post, userId, categoryId);
 		
 		return new ResponseEntity<>(postDto,HttpStatus.CREATED);
 	}
 	
 	@PutMapping("post/{postId}")
-	public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postdto,int postId)
+	public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postdto,@PathVariable int postId)
 	{
 		return ResponseEntity.ok(this.postService.updatePost(postdto, postId));
 	}
 	
 	@GetMapping("post/{postId}")
-	public ResponseEntity<PostDto> getSinglePost(int postId)
+	public ResponseEntity<PostDto> getSinglePost(@PathVariable int postId)
 	{
 		return ResponseEntity.ok(this.postService.getSinglePost(postId));
 	}
@@ -59,14 +77,14 @@ public class PostController {
 		return ResponseEntity.ok("Post Delete Successfully.");
 	}
 	
-	@GetMapping("post/{userId}")
+	@GetMapping("post/user/{userId}")
 	public ResponseEntity<List<PostDto>> getPostByUser(@PathVariable int userId)
 	{
 		List<PostDto> postdto=this.postService.getPostByUser(userId);
 		return new ResponseEntity<>(postdto,HttpStatus.OK);
 	}
 	
-	@GetMapping("post/{categotyId}")
+	@GetMapping("post/category/{categotyId}")
 	public ResponseEntity<List<PostDto>> getPostByCategory(@PathVariable int categoryId)
 	{
 		List<PostDto> postdto=this.postService.getPostByCategory(categoryId);
