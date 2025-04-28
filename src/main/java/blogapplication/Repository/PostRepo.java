@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import blogapplication.Model.Category;
 import blogapplication.Model.Posts;
 import blogapplication.Model.User;
-import blogapplication.Payloads.PostDto;
 @Repository
 public interface PostRepo extends JpaRepository<Posts, Integer>{
 

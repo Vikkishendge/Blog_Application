@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import blogapplication.Payloads.CommentDto;
+import blogapplication.Payloads.Responseapi;
 import blogapplication.Service.CommentService;
 
 @RestController
@@ -21,7 +22,7 @@ public class CommentController {
 	private CommentService commentService;
 	
 	  @PostMapping("comment/{postId}")
-	    public ResponseEntity<CommentDto> createComment(@RequestBody CommentDto commentdto,int postId)
+	    public ResponseEntity<CommentDto> createComment(@RequestBody CommentDto commentdto,@PathVariable int postId)
 	    {
 	        System.out.println("content"+commentdto.getContent());
 	        
@@ -31,11 +32,12 @@ public class CommentController {
 	    }
 
 	    @DeleteMapping("comment/{commentId}")
-	    public ResponseEntity<String> deleteComment(@PathVariable int commentId)
+	    public Responseapi deleteComment(@PathVariable int commentId)
 	    {
 	        this.commentService.deleteComment(commentId);
 	        
-	        return ResponseEntity.ok("comment Delete Successfully....");
+	        Responseapi ar = new Responseapi("comments delete successfully",true);
+			return ar;
 	    }
 
 }

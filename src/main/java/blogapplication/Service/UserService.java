@@ -16,5 +16,5 @@ public interface UserService {
 	
 	public void deleteUser(int userId);
 	
-
+	UserDto registerNewUser(UserDto user);
 }

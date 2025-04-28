@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import blogapplication.Payloads.PostDto;
+import blogapplication.Payloads.Responseapi;
 import blogapplication.Service.CloudinaryService;
 import blogapplication.Service.PostService;
 
@@ -71,10 +72,11 @@ public class PostController {
 	}
 	
 	@DeleteMapping("post/{postId}")
-	public ResponseEntity<String> deletePost(@PathVariable int postId)
+	public Responseapi deletePost(@PathVariable int postId)
 	{
 		this.postService.deletePost(postId);
-		return ResponseEntity.ok("Post Delete Successfully.");
+		Responseapi apr = new Responseapi("this post deleted successfully",true);
+		return apr;
 	}
 	
 	@GetMapping("post/user/{userId}")

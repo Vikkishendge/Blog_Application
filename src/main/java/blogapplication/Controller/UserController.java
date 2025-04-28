@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import blogapplication.Payloads.Responseapi;
 import blogapplication.Payloads.UserDto;
 import blogapplication.Service.UserService;
 import jakarta.validation.Valid;
@@ -54,10 +55,10 @@ public class UserController {
 	}
 	
 	@DeleteMapping("user/{userId}")
-	public ResponseEntity<String> deleteUser(@PathVariable int userId)
+	public ResponseEntity<Responseapi> deleteUser(@PathVariable int userId)
 	{
 		this.userservice.deleteUser(userId);
-		return ResponseEntity.ok("User deleted successfully.");
+		return new ResponseEntity(new Responseapi("User deleted successfully",true),HttpStatus.OK);
 	}
 
 }

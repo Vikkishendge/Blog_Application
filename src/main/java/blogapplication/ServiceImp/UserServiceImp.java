@@ -1,10 +1,12 @@
 package blogapplication.ServiceImp;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import blogapplication.Exceptions.ResourceNotFoundException;
@@ -12,7 +14,6 @@ import blogapplication.Model.User;
 import blogapplication.Payloads.UserDto;
 import blogapplication.Repository.UserRepo;
 import blogapplication.Service.UserService;
-import blogapplication.ModelMappper.ModelMapperConvert;
 
 @Service
 class UserServiceImp implements UserService{
@@ -20,17 +21,27 @@ class UserServiceImp implements UserService{
 	private ModelMapper modelmapper;
 	@Autowired
 	UserRepo userRepo;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	@Override
 	 public UserDto createUser(UserDto userDto) {
+		
         System.out.println("Received DTO: " + userDto.toString()); // Debug log
         
         User user = this.modelmapper.map(userDto, User.class);
         System.out.println("Mapped User: " + user.toString()); // Debug log
         
+        
+        user.setCreated_at(new Date());
+        
         User savedUser = this.userRepo.save(user);
         System.out.println("Saved User: " + savedUser.toString()); // Debug log
         
-        return this.modelmapper.map(savedUser, UserDto.class);
+        UserDto responseDto=this.modelmapper.map(savedUser, UserDto.class);
+        responseDto.setPassword(null);
+        
+        return responseDto;
     }
 
 	@Override
@@ -40,6 +51,8 @@ class UserServiceImp implements UserService{
 		user.setName(userdto.getName());
 		user.setEmail(userdto.getEmail());
 		user.setPassword(userdto.getPassword());
+      	user.setCreated_at(new Date());
+		user.setBio(userdto.getBio());
 		
 		User updateUser=this.userRepo.save(user);
 		
@@ -67,6 +80,23 @@ class UserServiceImp implements UserService{
 		this.userRepo.delete(user);   
 	}
 
+	@Override
+	public UserDto registerNewUser(UserDto userDto) {
+
+		User user = this.modelmapper.map(userDto, User.class);
+
+		// encoded the password
+		user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+		user.setCreated_at(new Date());
+		
+		
+		User newUser = this.userRepo.save(user);
+
+		UserDto responseDto=this.modelmapper.map(newUser, UserDto.class);
+        responseDto.setPassword(null);
+        
+		return responseDto;
+	}
 
 
 }

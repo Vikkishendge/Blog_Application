@@ -28,7 +28,11 @@ public class CloudinaryServiceImp implements CloudinaryService{
 		
 		file.transferTo(uploadedFile);
 		
-		Map uploadResult = cloudinary.uploader().upload(uploadedFile, ObjectUtils.emptyMap());
+		Map<String, Object> options = ObjectUtils.asMap(
+	            "folder", "blogimg"
+	        );
+		
+		Map uploadResult = cloudinary.uploader().upload(uploadedFile,options);
 		
 		return uploadResult.get("secure_url").toString();
 	}
